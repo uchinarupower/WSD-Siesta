@@ -1,5 +1,8 @@
 package jp.ac.titech.itpro.sdl.siesta;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,6 +19,8 @@ import androidx.navigation.ui.NavigationUI;
 import jp.ac.titech.itpro.sdl.siesta.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
+
+    final static String TAG = "Main";
 
     private ActivityMainBinding binding;
     private MyNumberPicker np_hour, np_min;
@@ -63,11 +68,36 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 input_hour = np_hour.getValue();
                 input_minute = np_min.getValue();
-                //Log.d("hour", String.valueOf(input_hour));
-                //Log.d("minute", String.valueOf(input_minute));
+                Intent intent = new Intent(MainActivity.this, sensingAlarm.class);
+                startService(intent);
+                Log.d(TAG, "call Alarm");
+
+                //runAlarm(input_hour, input_minute);
+
+                Log.d(TAG, String.valueOf(input_hour));
+                Log.d(TAG, String.valueOf(input_minute));
             }
         });
     }
+
+    /*private void runAlarm(){
+        // ブロードキャストリスナー
+        BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action = intent.getAction();
+                if (action != null) {
+                    if (action.equals(Intent.ACTION_SCREEN_ON)) {
+                        // 画面ON時
+                        Log.d(TAG, "SCREEN_ON");
+                    } else if (action.equals(Intent.ACTION_SCREEN_OFF)) {
+                        // 画面OFF時
+                        Log.d(TAG, "SCREEN_OFF");
+                    }
+                }
+            }
+        };
+    }*/
 
 
 
