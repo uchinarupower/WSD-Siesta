@@ -52,9 +52,17 @@
         app:layout_constraintBottom_toBottomOf="@id/number_picker_m"
         app:layout_constraintStart_toEndOf="@id/number_picker_m"
         app:layout_constraintTop_toTopOf="@+id/number_picker_m"
-        app:layout_constraintVertical_bias="0.15"
+        app:layout_constraintVertical_bias="0.15" />
 
-        />
+    <Button
+        android:id="@+id/btn_start"
+        android:layout_width="232dp"
+        android:layout_height="56dp"
+        android:text="START!"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"

@@ -27,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
     private MyNumberPicker np_hour, np_min;
-    private TextView textv_h, textv_m;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
