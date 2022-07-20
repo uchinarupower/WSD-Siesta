@@ -1,3 +1,5 @@
+// https://words-hiro.blog.ss-blog.jp/2016-01-27
+
 package jp.ac.titech.itpro.sdl.siesta;
 
 import android.content.Context;
@@ -29,7 +31,7 @@ public class MyNumberPicker extends NumberPicker {
 
     private void updateView(View child) {
         if (child instanceof EditText) {
-            ((EditText) child).setTextSize(TypedValue.COMPLEX_UNIT_SP, 20.0f);
+            ((EditText) child).setTextSize(TypedValue.COMPLEX_UNIT_SP, 30.0f);
             ((EditText) child).setTextColor(Color.BLACK);
         }
     }

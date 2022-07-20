@@ -26,7 +26,7 @@ import jp.ac.titech.itpro.sdl.siesta.databinding.ActivityMainBinding;
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
-    private NumberPicker np_hour, np_min;
+    private MyNumberPicker np_hour, np_min;
     private TextView textv_h, textv_m;
 
     @Override
