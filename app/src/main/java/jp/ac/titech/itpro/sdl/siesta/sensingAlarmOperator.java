@@ -125,8 +125,6 @@ public class sensingAlarmOperator extends Service implements SensorEventListener
                         broadcast.putExtra("SLEEP", true);
                         broadcast.setAction("USER_IS_SLEEPING");
                         getBaseContext().sendBroadcast(broadcast);
-                        // stop srv
-                        stopSelf();
                     }
                 }
                 else{

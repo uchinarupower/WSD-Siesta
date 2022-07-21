@@ -4,7 +4,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -12,10 +17,20 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.Locale;
+
 public class SubActivity extends AppCompatActivity {
     final static String TAG = "subActivity";
     private TextView text_timer;
-    private long setting_time;
+    private long setting_time = 0;
+    private long milliTimeLeft = 0;
+    private CountDownTimer timer;
+    private UpdateReceiver receiver;
+    private IntentFilter filter;
+    private Intent intent_a;
+    private Uri uri;
+    private MediaPlayer player;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,23 +44,110 @@ public class SubActivity extends AppCompatActivity {
         int input_hour = i.getIntExtra("HOUR", 0);
         int input_minute = i.getIntExtra("MINUTE", 0);
         // 0埋め
-        text_timer.setText(String.format("%02d", new Integer(input_hour)) + ":" + String.format("%02d", new Integer(input_minute)));
+        //text_timer.setText(String.format("%02d", new Integer(input_hour)) + ":" + String.format("%02d", new Integer(input_minute)));String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
+        text_timer.setText(String.format(Locale.getDefault(), "%02d:%02d:00", input_hour, input_minute));
         // ミリ秒に変換
         setting_time = (long) ((long)input_hour*60.0*60.0*1000.0 + (long)input_minute*60*1000.0);
+        milliTimeLeft = setting_time;
 
         // receiver
-        UpdateReceiver receiver = new UpdateReceiver();
-        IntentFilter filter = new IntentFilter();
+        receiver = new UpdateReceiver();
+        filter = new IntentFilter();
         filter.addAction("USER_IS_SLEEPING");
-        registerReceiver(receiver, filter);
+
+        // start sensingAlarmOperator
+        intent_a = new Intent(getApplication(), sensingAlarmOperator.class);
+        startService(intent_a);
+
+        // sound
+        /*uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        MediaPlayer player = new MediaPlayer();
+        player.setAudioStreamType(AudioManager.STREAM_ALARM); // アラームとして
+        player.setDataSource(getApplicationContext(), uri);
+        player.setLooping(true);*/                              // ループ再生を設定
+                                          // 音声を読み込み
+        player = MediaPlayer.create(this, R.raw.music);
+        player.setLooping(true);
+        player.setAudioStreamType(AudioManager.STREAM_ALARM);
+        // 音量調整を端末のボタンに任せる
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+
 
 
         btn_stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //setting_time = 0;
+                //milliTimeLeft = 0;
+                //stopService(intent_a);
+                audioStop();
                 finish();
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // ブロードキャストレシーバーを登録する。（どんなインテントがきたらどのレシーバーをキックするかを定義づける）
+        registerReceiver(receiver, filter);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        unregisterReceiver(receiver);
+    }
+
+    @Override
+    public void onDestroy() {
+        unregisterReceiver(receiver);
+        super.onDestroy();
+    }
+
+    private void startTimer(){
+        timer = new CountDownTimer(milliTimeLeft,1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                milliTimeLeft = millisUntilFinished;
+                int hour = (int)(milliTimeLeft/1000)/(60*60);
+                int minutes = (int)(milliTimeLeft/1000)/60 - hour*60;
+                int seconds = (int)(milliTimeLeft/1000) - hour*60*60 - minutes*60;
+                String timerLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d:%02d", hour, minutes, seconds);
+                text_timer.setText(timerLeftFormatted);
+            }
+
+            @Override
+            public void onFinish() {
+                text_timer.setText("00:00:00");
+                // audio
+                Log.d(TAG, "SOUND");
+                audioPlay();
+            }
+        }.start();
+    }
+
+    private boolean audioSetup(){
+        boolean fileCheck = false;
+
+        // rawにファイルがある場合
+        player = MediaPlayer.create(this, R.raw.music);
+        // 音量調整を端末のボタンに任せる
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        fileCheck = true;
+
+        return fileCheck;
+    }
+
+    private void audioPlay(){
+        player.start();
+    }
+
+    private void audioStop(){
+        player.stop();
+        player.reset();
+        player.release();
+        player = null;
     }
 
     protected class UpdateReceiver extends BroadcastReceiver {
@@ -55,7 +157,9 @@ public class SubActivity extends AppCompatActivity {
             Boolean mIsSleeping = i.getBoolean("SLEEP");
             if (mIsSleeping){
                 Log.d(TAG, "RUN TIMER");
-                //startTimer();
+                //unregisterReceiver(receiver);
+                //stopService(intent_a);
+                startTimer();
             }
 
         }

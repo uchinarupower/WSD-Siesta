@@ -69,8 +69,8 @@ public class MainActivity extends AppCompatActivity {
                 input_hour = np_hour.getValue();
                 input_minute = np_min.getValue();
 
-                Intent intent_a = new Intent(MainActivity.this, sensingAlarmOperator.class);
-                startService(intent_a);
+                //Intent intent_a = new Intent(MainActivity.this, sensingAlarmOperator.class);
+                //startService(intent_a);
 
                 Intent intent_s = new Intent(MainActivity.this, SubActivity.class);
                 intent_s.putExtra("HOUR", input_hour);
