@@ -33,6 +33,7 @@ public class sensingAlarmOperator extends Service implements SensorEventListener
     private float light_value;
     private  float diff_r = 0;
     final static double SCORE_THRESHOLD = 40;
+    private int continuing = 0;
 
     /*public sensingAlarm() {
         super("sensingAlarm");
@@ -115,10 +116,22 @@ public class sensingAlarmOperator extends Service implements SensorEventListener
                 Log.d(TAG, "TIMER LOOP");
                 double sleep_score = calcSleepScore();
                 if (sleep_score < SCORE_THRESHOLD){
-                    // alarm start
-
+                    continuing++;
+                    // 1分以上寝たと判断され続けたら
+                    if (continuing > 6){
+                        // send msg
+                        // srv -> activity 通信
+                        Intent broadcast = new Intent();
+                        broadcast.putExtra("SLEEP", true);
+                        broadcast.setAction("USER_IS_SLEEPING");
+                        getBaseContext().sendBroadcast(broadcast);
+                        // stop srv
+                        stopSelf();
+                    }
                 }
-                Log.d(TAG, "SLEEP SCORE: " + String.valueOf(sleep_score));
+                else{
+                    continuing = 0;
+                }
                 Log.d(TAG, "SLEEP SCORE: " + String.valueOf(sleep_score));
                 diff_r = 0;
             }
@@ -173,13 +186,7 @@ public class sensingAlarmOperator extends Service implements SensorEventListener
             sleep_score = diff_r + light_value;
         }
         return sleep_score;
-
-
-
     }
-
-
-
 
 
     @Override
