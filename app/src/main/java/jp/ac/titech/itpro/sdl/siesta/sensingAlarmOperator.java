@@ -32,7 +32,7 @@ public class sensingAlarmOperator extends Service implements SensorEventListener
     private float[] last_r_vector_value = new float[3];
     private float light_value;
     private  float diff_r = 0;
-    final static double SCORE_THRESHOLD = 30;
+    final static double SCORE_THRESHOLD = 40;
 
     /*public sensingAlarm() {
         super("sensingAlarm");
@@ -116,8 +116,7 @@ public class sensingAlarmOperator extends Service implements SensorEventListener
                 double sleep_score = calcSleepScore();
                 if (sleep_score < SCORE_THRESHOLD){
                     // alarm start
-                    Intent intent = new Intent(getApplication(),SubActivity.class);
-                    startActivity(intent);
+
                 }
                 Log.d(TAG, "SLEEP SCORE: " + String.valueOf(sleep_score));
                 Log.d(TAG, "SLEEP SCORE: " + String.valueOf(sleep_score));
