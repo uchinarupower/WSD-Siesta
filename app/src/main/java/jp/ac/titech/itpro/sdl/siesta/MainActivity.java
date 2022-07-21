@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 input_hour = np_hour.getValue();
                 input_minute = np_min.getValue();
-                Intent intent = new Intent(MainActivity.this, sensingAlarm.class);
+                Intent intent = new Intent(MainActivity.this, sensingAlarmOperator.class);
                 startService(intent);
                 Log.d(TAG, "call Alarm");
 
