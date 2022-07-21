@@ -60,17 +60,12 @@ public class SubActivity extends AppCompatActivity {
         startService(intent_a);
 
         // sound
-        /*uri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        MediaPlayer player = new MediaPlayer();
-        player.setAudioStreamType(AudioManager.STREAM_ALARM); // アラームとして
-        player.setDataSource(getApplicationContext(), uri);
-        player.setLooping(true);*/                              // ループ再生を設定
-                                          // 音声を読み込み
-        player = MediaPlayer.create(this, R.raw.music);
+        player = MediaPlayer.create(this, R.raw.audio);
         player.setLooping(true);
-        player.setAudioStreamType(AudioManager.STREAM_ALARM);
+        //player.setAudioStreamType(AudioManager.STREAM_ALARM);
         // 音量調整を端末のボタンに任せる
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
+        //player.start();
 
 
 
@@ -80,7 +75,9 @@ public class SubActivity extends AppCompatActivity {
                 //setting_time = 0;
                 //milliTimeLeft = 0;
                 //stopService(intent_a);
-                audioStop();
+                if (player != null){
+                    audioStop();
+                }
                 finish();
             }
         });
@@ -89,7 +86,7 @@ public class SubActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        // ブロードキャストレシーバーを登録する。（どんなインテントがきたらどのレシーバーをキックするかを定義づける）
+        // ブロードキャストレシーバーを登録する。
         registerReceiver(receiver, filter);
     }
 
@@ -99,11 +96,6 @@ public class SubActivity extends AppCompatActivity {
         unregisterReceiver(receiver);
     }
 
-    @Override
-    public void onDestroy() {
-        unregisterReceiver(receiver);
-        super.onDestroy();
-    }
 
     private void startTimer(){
         timer = new CountDownTimer(milliTimeLeft,1000) {
@@ -125,18 +117,6 @@ public class SubActivity extends AppCompatActivity {
                 audioPlay();
             }
         }.start();
-    }
-
-    private boolean audioSetup(){
-        boolean fileCheck = false;
-
-        // rawにファイルがある場合
-        player = MediaPlayer.create(this, R.raw.music);
-        // 音量調整を端末のボタンに任せる
-        setVolumeControlStream(AudioManager.STREAM_MUSIC);
-        fileCheck = true;
-
-        return fileCheck;
     }
 
     private void audioPlay(){
