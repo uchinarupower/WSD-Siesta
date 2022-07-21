@@ -32,8 +32,7 @@ public class sensingAlarmOperator extends Service implements SensorEventListener
     private float[] last_r_vector_value = new float[3];
     private float light_value;
     private  float diff_r = 0;
-    final static float SCORE_THRESHOLD = 15;
-    final static float LIGHT_THRESHOLD = 15;
+    final static double SCORE_THRESHOLD = 30;
 
     /*public sensingAlarm() {
         super("sensingAlarm");
@@ -114,11 +113,14 @@ public class sensingAlarmOperator extends Service implements SensorEventListener
             @Override
             public void run() {
                 Log.d(TAG, "TIMER LOOP");
-                float sleep_score = calcSleepScore();
-                if (sleep_score > SCORE_THRESHOLD){
+                double sleep_score = calcSleepScore();
+                if (sleep_score < SCORE_THRESHOLD){
                     // alarm start
+                    Intent intent = new Intent(getApplication(),SubActivity.class);
+                    startActivity(intent);
                 }
-                Log.d(TAG, "diff_r: " + String.valueOf(diff_r));
+                Log.d(TAG, "SLEEP SCORE: " + String.valueOf(sleep_score));
+                Log.d(TAG, "SLEEP SCORE: " + String.valueOf(sleep_score));
                 diff_r = 0;
             }
         }, 0, INTERVAL_PERIOD);
@@ -160,8 +162,21 @@ public class sensingAlarmOperator extends Service implements SensorEventListener
         Log.d(TAG, "onAccuracyChanged: accuracy=" + accuracy);
     }
 
-    private float calcSleepScore(){
-        return 0;
+    private double calcSleepScore(){
+        // diff_r : 閾値 15くらい
+        // light_value : 閾値 15くらい
+        // mIsScreenOn : trueなら20を返す falseなら0 (lightのmin10を足して大体threshold 30になるくらい = 画面付いてるならほんとに端末が止まってないとダメ)
+        double sleep_score = 0;
+        if (mIsScreenOn){
+            sleep_score = diff_r + light_value + 20.0;
+        }
+        else{
+            sleep_score = diff_r + light_value;
+        }
+        return sleep_score;
+
+
+
     }
 
 
