@@ -35,6 +35,10 @@ public class sensingAlarmOperator extends Service implements SensorEventListener
     final static double SCORE_THRESHOLD = 40;
     private int continuing = 0;
 
+    private double move_gain = 1;
+    private double right_gain = 0.5;
+    private double screen_gain = 20;
+
     /*public sensingAlarm() {
         super("sensingAlarm");
     }*/
@@ -151,8 +155,6 @@ public class sensingAlarmOperator extends Service implements SensorEventListener
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        float omegaZ = event.values[2];  // z-axis angular velocity (rad/sec)
-
         int sensor_type = event.sensor.getType();
         if (sensor_type == Sensor.TYPE_ROTATION_VECTOR){
             Log.d(TAG, "GET ROTATION_VECTOR x: "+ String.valueOf(event.values[0]) + ", y: " + String.valueOf(event.values[1]) + ", z: " + String.valueOf(event.values[2]));
@@ -178,10 +180,10 @@ public class sensingAlarmOperator extends Service implements SensorEventListener
         // mIsScreenOn : trueなら20を返す falseなら0 (lightのmin10を足して大体threshold 30になるくらい = 画面付いてるならほんとに端末が止まってないとダメ)
         double sleep_score = 0;
         if (mIsScreenOn){
-            sleep_score = diff_r + light_value + 20.0;
+            sleep_score = diff_r*move_gain + light_value*right_gain + screen_gain;
         }
         else{
-            sleep_score = diff_r + light_value;
+            sleep_score = diff_r*move_gain + light_value*right_gain;
         }
         return sleep_score;
     }
