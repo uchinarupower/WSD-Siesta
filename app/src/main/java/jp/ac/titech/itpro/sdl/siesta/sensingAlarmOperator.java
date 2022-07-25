@@ -155,8 +155,6 @@ public class sensingAlarmOperator extends Service implements SensorEventListener
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        float omegaZ = event.values[2];  // z-axis angular velocity (rad/sec)
-
         int sensor_type = event.sensor.getType();
         if (sensor_type == Sensor.TYPE_ROTATION_VECTOR){
             Log.d(TAG, "GET ROTATION_VECTOR x: "+ String.valueOf(event.values[0]) + ", y: " + String.valueOf(event.values[1]) + ", z: " + String.valueOf(event.values[2]));
