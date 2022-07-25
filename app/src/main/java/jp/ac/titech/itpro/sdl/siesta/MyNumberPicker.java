@@ -32,7 +32,6 @@ public class MyNumberPicker extends NumberPicker {
     private void updateView(View child) {
         if (child instanceof EditText) {
             ((EditText) child).setTextSize(TypedValue.COMPLEX_UNIT_SP, 30.0f);
-            ((EditText) child).setTextColor(Color.BLACK);
         }
     }
 }
