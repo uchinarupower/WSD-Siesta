@@ -47,7 +47,7 @@ public class SubActivity extends AppCompatActivity {
         //text_timer.setText(String.format("%02d", new Integer(input_hour)) + ":" + String.format("%02d", new Integer(input_minute)));String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
         text_timer.setText(String.format(Locale.getDefault(), "%02d:%02d:00", input_hour, input_minute));
         // ミリ秒に変換
-        setting_time = (long) ((long)input_hour*60.0*60.0*1000.0 + (long)input_minute*60*1000.0);
+        setting_time = (long) ((long)input_hour*60.0*60.0*1000.0 + (long)input_minute*60*1000.0) / 10;
         milliTimeLeft = setting_time;
 
         // receiver

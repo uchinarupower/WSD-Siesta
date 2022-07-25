@@ -32,8 +32,8 @@ public class sensingAlarmOperator extends Service implements SensorEventListener
     private float[] last_r_vector_value = new float[3];
     private float light_value;
     private  float diff_r = 0;
-    final static double SCORE_THRESHOLD = 40;
-    private int continuing = 0;
+    final static double SCORE_THRESHOLD = 2000;
+    private int continuing = 10;
 
     /*public sensingAlarm() {
         super("sensingAlarm");
